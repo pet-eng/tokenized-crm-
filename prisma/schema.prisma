@@ -1,0 +1,52 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Contact {
+  id        String   @id @default(cuid())
+  name      String
+  company   String?
+  email     String?
+  phone     String?
+  notes     String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  leads    Lead[]
+  sponsors Sponsor[]
+}
+
+model Lead {
+  id            String    @id @default(cuid())
+  contactId     String
+  contact       Contact   @relation(fields: [contactId], references: [id], onDelete: Cascade)
+  stage         String    @default("new")
+  value         Float?
+  probability   Int?      @default(50)
+  nextFollowUp  DateTime?
+  followUpNotes String?
+  source        String?
+  holdReason    String?
+  mediaAsset    String    @default("Tokenized")
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+}
+
+model Sponsor {
+  id            String   @id @default(cuid())
+  contactId     String
+  contact       Contact  @relation(fields: [contactId], references: [id], onDelete: Cascade)
+  contractStart DateTime
+  contractEnd   DateTime
+  value         Float?
+  status        String   @default("active")
+  notes         String?
+  mediaAsset    String   @default("Tokenized")
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+}
