@@ -248,7 +248,11 @@ export default function LeadsPage() {
                       </TableCell>
                       <TableCell>{lead.contact.company || '-'}</TableCell>
                       <TableCell>
-                        <Badge variant="outline">{lead.mediaAsset}</Badge>
+                        <div className="flex flex-wrap gap-1">
+                          {lead.mediaAssets.map((a) => (
+                            <Badge key={a} variant="outline">{a}</Badge>
+                          ))}
+                        </div>
                       </TableCell>
                       <TableCell>
                         <DropdownMenu>

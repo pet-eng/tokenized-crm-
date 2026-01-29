@@ -184,7 +184,11 @@ export default function SponsorsPage() {
                         </div>
                       </TableCell>
                       <TableCell>
-                        <Badge variant="outline">{sponsor.mediaAsset}</Badge>
+                        <div className="flex flex-wrap gap-1">
+                          {sponsor.mediaAssets.map((a) => (
+                            <Badge key={a} variant="outline">{a}</Badge>
+                          ))}
+                        </div>
                       </TableCell>
                       <TableCell>
                         <DropdownMenu>

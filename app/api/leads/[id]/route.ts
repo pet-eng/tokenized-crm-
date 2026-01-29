@@ -24,7 +24,7 @@ export async function PATCH(
 ) {
   const { id } = await params
   const body = await request.json()
-  const { stage, value, probability, nextFollowUp, followUpNotes, source, holdReason, mediaAsset, name, company, email, phone, notes } = body
+  const { stage, value, probability, nextFollowUp, followUpNotes, source, holdReason, mediaAssets, name, company, email, phone, notes } = body
 
   const lead = await prisma.lead.update({
     where: { id },
@@ -36,7 +36,7 @@ export async function PATCH(
       followUpNotes,
       source,
       holdReason,
-      mediaAsset,
+      mediaAssets,
       contact: (name || company || email || phone || notes !== undefined) ? {
         update: {
           name,

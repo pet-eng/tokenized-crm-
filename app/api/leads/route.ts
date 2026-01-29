@@ -6,7 +6,7 @@ export async function GET(request: NextRequest) {
   const mediaAsset = searchParams.get('mediaAsset')
 
   const leads = await prisma.lead.findMany({
-    where: mediaAsset ? { mediaAsset } : undefined,
+    where: mediaAsset ? { mediaAssets: { has: mediaAsset } } : undefined,
     include: { contact: true },
     orderBy: { nextFollowUp: 'asc' },
   })
@@ -15,7 +15,7 @@ export async function GET(request: NextRequest) {
 
 export async function POST(request: NextRequest) {
   const body = await request.json()
-  const { name, company, email, phone, notes, stage, value, probability, nextFollowUp, followUpNotes, source, holdReason, mediaAsset } = body
+  const { name, company, email, phone, notes, stage, value, probability, nextFollowUp, followUpNotes, source, holdReason, mediaAssets } = body
 
   const lead = await prisma.lead.create({
     data: {
@@ -26,7 +26,7 @@ export async function POST(request: NextRequest) {
       followUpNotes,
       source,
       holdReason: holdReason || null,
-      mediaAsset: mediaAsset || 'Tokenized',
+      mediaAssets: mediaAssets && mediaAssets.length > 0 ? mediaAssets : ['Tokenized'],
       contact: {
         create: {
           name: name || company,

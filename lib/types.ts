@@ -20,7 +20,7 @@ export interface Lead {
   followUpNotes: string | null
   source: string | null
   holdReason: string | null
-  mediaAsset: string
+  mediaAssets: string[]
   createdAt: string
   updatedAt: string
 }
@@ -34,7 +34,7 @@ export interface Sponsor {
   value: number | null
   status: string
   notes: string | null
-  mediaAsset: string
+  mediaAssets: string[]
   createdAt: string
   updatedAt: string
 }

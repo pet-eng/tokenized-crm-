@@ -33,12 +33,13 @@ export function SponsorForm({ sponsor, trigger, onSuccess }: SponsorFormProps) {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     const formData = new FormData(e.currentTarget)
-    const data = Object.fromEntries(formData.entries())
+    const data: Record<string, unknown> = Object.fromEntries(formData.entries())
+    data.mediaAssets = formData.getAll('mediaAssets')
 
     if (sponsor) {
       await updateSponsor.mutateAsync({ id: sponsor.id, data })
     } else {
-      await createSponsor.mutateAsync(data)
+      await createSponsor.mutateAsync(data as Record<string, unknown>)
     }
 
     setOpen(false)
@@ -148,19 +149,21 @@ export function SponsorForm({ sponsor, trigger, onSuccess }: SponsorFormProps) {
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="mediaAsset">Media Asset</Label>
-              <select
-                id="mediaAsset"
-                name="mediaAsset"
-                defaultValue={sponsor?.mediaAsset || 'Tokenized'}
-                className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
-              >
+              <Label>Media Assets</Label>
+              <div className="flex flex-wrap gap-3">
                 {MEDIA_ASSETS.map((asset) => (
-                  <option key={asset.id} value={asset.id}>
+                  <label key={asset.id} className="flex items-center gap-2 text-sm">
+                    <input
+                      type="checkbox"
+                      name="mediaAssets"
+                      value={asset.id}
+                      defaultChecked={sponsor?.mediaAssets?.includes(asset.id) ?? asset.id === 'Tokenized'}
+                      className="rounded border-input"
+                    />
                     {asset.label}
-                  </option>
+                  </label>
                 ))}
-              </select>
+              </div>
             </div>
           </div>
 

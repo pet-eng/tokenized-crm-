@@ -83,7 +83,11 @@ Return only valid JSON, nothing else.`
     }
 
     // Create the lead
-    const mediaAsset = (body.mediaAsset as string) || 'Tokenized'
+    const mediaAssets: string[] = Array.isArray(body.mediaAssets)
+      ? body.mediaAssets
+      : body.mediaAsset
+        ? [body.mediaAsset as string]
+        : ['Tokenized']
     const lead = await prisma.lead.create({
       data: {
         stage: 'new',
@@ -92,7 +96,7 @@ Return only valid JSON, nothing else.`
         nextFollowUp: addDays(new Date(), 3),
         followUpNotes: `Inbound email: ${emailData.subject || 'No subject'}`,
         source: 'Email',
-        mediaAsset,
+        mediaAssets,
         contact: {
           create: {
             name: extractedData.name || extractedData.company || emailData.from || 'Unknown',

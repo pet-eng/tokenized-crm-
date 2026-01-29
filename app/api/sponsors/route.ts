@@ -6,7 +6,7 @@ export async function GET(request: NextRequest) {
   const mediaAsset = searchParams.get('mediaAsset')
 
   const sponsors = await prisma.sponsor.findMany({
-    where: mediaAsset ? { mediaAsset } : undefined,
+    where: mediaAsset ? { mediaAssets: { has: mediaAsset } } : undefined,
     include: { contact: true },
     orderBy: { contractEnd: 'asc' },
   })
@@ -15,7 +15,7 @@ export async function GET(request: NextRequest) {
 
 export async function POST(request: NextRequest) {
   const body = await request.json()
-  const { name, company, email, phone, notes, contractStart, contractEnd, value, status, mediaAsset } = body
+  const { name, company, email, phone, notes, contractStart, contractEnd, value, status, mediaAssets } = body
 
   const sponsor = await prisma.sponsor.create({
     data: {
@@ -24,7 +24,7 @@ export async function POST(request: NextRequest) {
       value: value ? parseFloat(value) : null,
       status: status || 'active',
       notes,
-      mediaAsset: mediaAsset || 'Tokenized',
+      mediaAssets: mediaAssets && mediaAssets.length > 0 ? mediaAssets : ['Tokenized'],
       contact: {
         create: {
           name: name || company,

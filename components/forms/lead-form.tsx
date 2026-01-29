@@ -33,12 +33,13 @@ export function LeadForm({ lead, trigger, onSuccess }: LeadFormProps) {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     const formData = new FormData(e.currentTarget)
-    const data = Object.fromEntries(formData.entries())
+    const data: Record<string, unknown> = Object.fromEntries(formData.entries())
+    data.mediaAssets = formData.getAll('mediaAssets')
 
     if (lead) {
       await updateLead.mutateAsync({ id: lead.id, data })
     } else {
-      await createLead.mutateAsync(data)
+      await createLead.mutateAsync(data as Record<string, unknown>)
     }
 
     setOpen(false)
@@ -147,31 +148,32 @@ export function LeadForm({ lead, trigger, onSuccess }: LeadFormProps) {
             </div>
           )}
 
-          <div className="grid grid-cols-2 gap-4">
-            <div className="space-y-2">
-              <Label htmlFor="mediaAsset">Media Asset</Label>
-              <select
-                id="mediaAsset"
-                name="mediaAsset"
-                defaultValue={lead?.mediaAsset || 'Tokenized'}
-                className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
-              >
-                {MEDIA_ASSETS.map((asset) => (
-                  <option key={asset.id} value={asset.id}>
-                    {asset.label}
-                  </option>
-                ))}
-              </select>
+          <div className="space-y-2">
+            <Label>Media Assets</Label>
+            <div className="flex flex-wrap gap-3">
+              {MEDIA_ASSETS.map((asset) => (
+                <label key={asset.id} className="flex items-center gap-2 text-sm">
+                  <input
+                    type="checkbox"
+                    name="mediaAssets"
+                    value={asset.id}
+                    defaultChecked={lead?.mediaAssets?.includes(asset.id) ?? asset.id === 'Tokenized'}
+                    className="rounded border-input"
+                  />
+                  {asset.label}
+                </label>
+              ))}
             </div>
-            <div className="space-y-2">
-              <Label htmlFor="source">Source</Label>
-              <Input
-                id="source"
-                name="source"
-                defaultValue={lead?.source || ''}
-                placeholder="Website, Referral, etc."
-              />
-            </div>
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="source">Source</Label>
+            <Input
+              id="source"
+              name="source"
+              defaultValue={lead?.source || ''}
+              placeholder="Website, Referral, etc."
+            />
           </div>
 
           <div className="space-y-2">

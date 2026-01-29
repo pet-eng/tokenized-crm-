@@ -100,7 +100,8 @@ export default function QuickAddPage() {
   const handleLeadSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     const formData = new FormData(e.currentTarget)
-    const data = Object.fromEntries(formData.entries())
+    const data: Record<string, unknown> = Object.fromEntries(formData.entries())
+    data.mediaAssets = formData.getAll('mediaAssets')
 
     await createLead.mutateAsync(data)
     router.push('/leads')
@@ -109,7 +110,8 @@ export default function QuickAddPage() {
   const handleSponsorSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     const formData = new FormData(e.currentTarget)
-    const data = Object.fromEntries(formData.entries())
+    const data: Record<string, unknown> = Object.fromEntries(formData.entries())
+    data.mediaAssets = formData.getAll('mediaAssets')
 
     await createSponsor.mutateAsync(data)
     router.push('/sponsors')
@@ -220,19 +222,21 @@ export default function QuickAddPage() {
                     />
                   </div>
                   <div className="space-y-2">
-                    <Label htmlFor="lead-mediaAsset">Media Asset</Label>
-                    <select
-                      id="lead-mediaAsset"
-                      name="mediaAsset"
-                      defaultValue="Tokenized"
-                      className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
-                    >
+                    <Label>Media Assets</Label>
+                    <div className="flex flex-wrap gap-3 pt-1">
                       {MEDIA_ASSETS.map((asset) => (
-                        <option key={asset.id} value={asset.id}>
+                        <label key={asset.id} className="flex items-center gap-2 text-sm">
+                          <input
+                            type="checkbox"
+                            name="mediaAssets"
+                            value={asset.id}
+                            defaultChecked={asset.id === 'Tokenized'}
+                            className="rounded border-input"
+                          />
                           {asset.label}
-                        </option>
+                        </label>
                       ))}
-                    </select>
+                    </div>
                   </div>
                 </div>
 
@@ -337,19 +341,21 @@ export default function QuickAddPage() {
                     />
                   </div>
                   <div className="space-y-2">
-                    <Label htmlFor="sponsor-mediaAsset">Media Asset</Label>
-                    <select
-                      id="sponsor-mediaAsset"
-                      name="mediaAsset"
-                      defaultValue="Tokenized"
-                      className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
-                    >
+                    <Label>Media Assets</Label>
+                    <div className="flex flex-wrap gap-3 pt-1">
                       {MEDIA_ASSETS.map((asset) => (
-                        <option key={asset.id} value={asset.id}>
+                        <label key={asset.id} className="flex items-center gap-2 text-sm">
+                          <input
+                            type="checkbox"
+                            name="mediaAssets"
+                            value={asset.id}
+                            defaultChecked={asset.id === 'Tokenized'}
+                            className="rounded border-input"
+                          />
                           {asset.label}
-                        </option>
+                        </label>
                       ))}
-                    </select>
+                    </div>
                   </div>
                 </div>
 

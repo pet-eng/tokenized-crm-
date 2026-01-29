@@ -11,8 +11,8 @@ export async function GET(request: NextRequest) {
   const thirtyDaysFromNow = new Date(today)
   thirtyDaysFromNow.setDate(thirtyDaysFromNow.getDate() + 30)
 
-  const leadFilter = mediaAsset ? { mediaAsset } : {}
-  const sponsorFilter = mediaAsset ? { mediaAsset } : {}
+  const leadFilter = mediaAsset ? { mediaAssets: { has: mediaAsset } } : {}
+  const sponsorFilter = mediaAsset ? { mediaAssets: { has: mediaAsset } } : {}
 
   const [
     totalLeads,

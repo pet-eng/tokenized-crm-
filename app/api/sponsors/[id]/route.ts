@@ -24,7 +24,7 @@ export async function PATCH(
 ) {
   const { id } = await params
   const body = await request.json()
-  const { contractStart, contractEnd, value, status, notes, mediaAsset, name, company, email, phone } = body
+  const { contractStart, contractEnd, value, status, notes, mediaAssets, name, company, email, phone } = body
 
   const sponsor = await prisma.sponsor.update({
     where: { id },
@@ -34,7 +34,7 @@ export async function PATCH(
       value: value !== undefined ? (value ? parseFloat(value) : null) : undefined,
       status,
       notes,
-      mediaAsset,
+      mediaAssets,
       contact: (name || company || email || phone) ? {
         update: {
           name,

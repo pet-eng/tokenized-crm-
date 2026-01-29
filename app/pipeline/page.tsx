@@ -141,9 +141,13 @@ export default function PipelinePage() {
                                             {lead.contact.company}
                                           </p>
                                         )}
-                                        <Badge variant="outline" className="text-xs mt-1">
-                                          {lead.mediaAsset}
-                                        </Badge>
+                                        <div className="flex flex-wrap gap-1 mt-1">
+                                          {lead.mediaAssets.map((a) => (
+                                            <Badge key={a} variant="outline" className="text-xs">
+                                              {a}
+                                            </Badge>
+                                          ))}
+                                        </div>
                                       </div>
                                       <LeadForm
                                         lead={lead}
